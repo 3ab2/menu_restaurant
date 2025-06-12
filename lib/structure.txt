@@ -1,0 +1,40 @@
+// Structure des dossiers de l'application
+/*
+lib/
+├── main.dart              // Point d'entrée principal
+├── config/                // Configuration de l'application
+│   ├── routes.dart        // Configuration des routes
+│   └── theme.dart         // Thème de l'application
+├── models/                // Modèles de données
+│   ├── user.dart          // Modèle d'utilisateur
+│   ├── task.dart          // Modèle de tâche
+│   ├── subtask.dart       // Modèle de sous-tâche
+│   └── message.dart       // Modèle de message
+├── services/              // Services et API
+│   ├── auth_service.dart  // Service d'authentification
+│   ├── task_service.dart  // Service de gestion des tâches
+│   ├── user_service.dart  // Service de gestion des utilisateurs
+│   └── message_service.dart // Service de messagerie
+├── screens/               // Écrans de l'application
+│   ├── auth/
+│   │   ├── login_screen.dart
+│   │   └── register_screen.dart
+│   ├── dashboard/
+│   │   └── dashboard_screen.dart
+│   ├── tasks/
+│   │   ├── task_list_screen.dart
+│   │   ├── task_detail_screen.dart
+│   │   └── task_create_screen.dart
+│   ├── messaging/
+│   │   └── chat_screen.dart
+│   └── admin/
+│       └── admin_panel_screen.dart
+├── widgets/               // Widgets réutilisables
+│   ├── task_card.dart
+│   ├── stats_chart.dart
+│   ├── user_avatar.dart
+│   └── custom_drawer.dart
+└── utils/                 // Utilitaires
+    ├── validators.dart
+    └── date_formatter.dart
+*/
