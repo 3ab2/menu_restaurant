@@ -186,55 +186,29 @@ class DatabaseService {
     });
   }
 
-  Future<List<Order>> getOrders(String restaurantId) async {
+  Future<List<Order>> getOrders() async {
     final db = await database;
-    final List<Map<String, dynamic>> orderMaps = await db.query(
-      'orders',
-      where: 'restaurantId = ?',
-      whereArgs: [restaurantId],
-    );
-
-    List<Order> orders = [];
-    for (var orderMap in orderMaps) {
-      final List<Map<String, dynamic>> itemMaps = await db.query(
+    final List<Map<String, dynamic>> maps = await db.query('orders');
+    return Future.wait(maps.map((map) async {
+      final items = await db.query(
         'order_items',
         where: 'orderId = ?',
-        whereArgs: [orderMap['id']],
+        whereArgs: [map['id']],
       );
+      return Order.fromJson({
+        ...map,
+        'items': items,
+      });
+    }));
+  }
 
-      List<OrderItem> items = [];
-      for (var itemMap in itemMaps) {
-        final menuItemMaps = await db.query(
-          'menu_items',
-          where: 'id = ?',
-          whereArgs: [itemMap['menuItemId']],
-        );
-
-        if (menuItemMaps.isNotEmpty) {
-          final menuItem = MenuItem.fromJson(menuItemMaps.first);
-          items.add(OrderItem(
-            menuItem: menuItem,
-            quantity: itemMap['quantity'],
-            notes: itemMap['notes'],
-          ));
-        }
-      }
-
-      orders.add(Order(
-        id: orderMap['id'],
-        restaurantId: orderMap['restaurantId'],
-        items: items,
-        totalAmount: orderMap['totalAmount'],
-        createdAt: DateTime.parse(orderMap['createdAt']),
-        status: OrderStatus.values.firstWhere(
-          (e) => e.toString() == orderMap['status'],
-        ),
-        tableNumber: orderMap['tableNumber'],
-        customerName: orderMap['customerName'],
-        notes: orderMap['notes'],
-      ));
-    }
-
-    return orders;
+  Future<void> updateOrderStatus(String orderId, OrderStatus newStatus) async {
+    final db = await database;
+    await db.update(
+      'orders',
+      {'status': newStatus.toString()},
+      where: 'id = ?',
+      whereArgs: [orderId],
+    );
   }
 } 
